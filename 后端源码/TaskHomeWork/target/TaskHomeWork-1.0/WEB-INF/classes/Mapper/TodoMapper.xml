@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oukele.dao.TodoMapper">
+    <resultMap id="BaseResultMap" type="com.oukele.model.Todo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="detail" jdbcType="VARCHAR" property="detail"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="finished_at" jdbcType="TIMESTAMP" property="finishedAt"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from todo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.oukele.model.Todo">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into todo ( name, detail)
+        values ( #{name,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.oukele.model.Todo">
+    update todo
+    set name = #{name,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      finished_at = #{finishedAt,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=INTEGER},
+      memo = #{memo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <update id="updateStatus" parameterType="com.oukele.model.Todo">
+      update todo set state=#{state} where id=#{id}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, detail, created_at, finished_at, state, memo
+    from todo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, detail, created_at, finished_at, state, memo
+    from todo
+  </select>
+</mapper>
